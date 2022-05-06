@@ -1,0 +1,96 @@
+---
+title: "Outcome 4"
+author: "Chase Tarr"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(randomizr)
+library(DeclareDesign)
+library(fabricatr)
+library(kableExtra)
+library(estimatr)
+library(DT)
+```
+
+```{r}
+set.seed(228)
+knowledge_population <- declare_population(
+  knowledge = add_level(N = 6,
+                    baseline =
+                      c(0.7,0.6,0.5,0.4,0.2,0.2)), # based on different sized communities within the closest city (city districts)
+  community_pop = add_level(N = c(1900,1250,900,700,445,390), # households
+                      know = draw_binary(baseline))) # each districts population
+
+pop <- knowledge_population()
+pop.vector <- c(1900,1250,900,700,445,390)
+
+my_estimand <- declare_inquiry(mean(know),
+                                 label = "Ybar")
+
+```
+
+```{r}
+knowledge_research <- declare_assignment(prob = 0.7,
+                               assignment_variable = "r",
+                               legacy = T)
+
+knowledge_research
+
+knowledge_sampling <- declare_sampling(strata = knowledge,
+                             strata_n = c(300,200,100,90,80,50), # number of community households our goal is to have respond to knowledge survey
+                             legacy = T)
+```
+
+```{r}
+strata_weighted_mean <- function(data){
+  data.frame(
+    estimator_label = "strata_w_mean",
+    estimand_label = "Ybar",
+    n = nrow(data),
+    stringsAsFactors = FALSE,
+    estimate = data %>% 
+      filter(r == 1) %>% 
+      group_by(knowledge) %>% 
+      summarize(mean = mean(know)) %>% 
+      mutate(prop=pop.vector/sum(pop.vector)) %>% 
+      mutate(sub.mean = mean*prop) %>% 
+      pull(sub.mean) %>% 
+      sum()
+  )
+}
+
+
+```
+
+```{r}
+knowledge_answer <- declare_estimator(
+  handler = label_estimator(strata_weighted_mean),
+  inquiry = my_estimand)
+
+knowledge_design <- knowledge_population + my_estimand + knowledge_research + knowledge_sampling + knowledge_answer
+
+knowledge_diagnosis <- diagnose_design(knowledge_design, sims = 100)
+
+knowledge_diagnosis$diagnosands_df[,c(8,9,6,10)] %>% 
+  kable()
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+

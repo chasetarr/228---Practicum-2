@@ -1,0 +1,82 @@
+---
+title: "Practicum 2 Code - Outcome 2"
+author: "Chase Tarr"
+date: "5/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(randomizr)
+library(DeclareDesign)
+library(fabricatr)
+library(kableExtra)
+library(estimatr)
+library(DT)
+```
+
+```{r}
+set.seed(228)
+stream_pop <- declare_population(
+  stream = add_level(N = 10,
+                    stream = #average flow?
+                      c(0.8,0.8,0.7,0.6,0.5,0.4,0.2,0.2,0.1,0.1)), # based on different stream size branching off main waterway
+  stream_size = add_level(N = c(2000,2000,1700,1400,1150,900,400,400,100,100), #name variables in a way that corresponds with actual data
+                      know = draw_binary(stream))) # 
+
+pop <- stream_pop()
+pop.vector <- c(2000,2000,1700,1400,1150,900,400,400,100,100)
+
+my_estimand <- declare_inquiry(mean(know),
+                                 label = "Ybar")
+
+```
+
+```{r}
+stream_research <- declare_assignment(prob = 0.7,
+                               assignment_variable = "r",
+                               legacy = T)
+
+
+stream_sampling <- declare_sampling(strata = stream,
+                             strata_n =  c(667,667,567,467,383,300,134,134,34,34), # amount of stream km area we want to have sampled from each stream
+                             legacy = T)
+```
+
+```{r}
+strata_weighted_mean <- function(data){
+  data.frame(
+    estimator_label = "strata_w_mean",
+    estimand_label = "Ybar",
+    n = nrow(data),
+    stringsAsFactors = FALSE,
+    estimate = data %>% 
+      filter(r == 1) %>% 
+      group_by(stream) %>% 
+      summarize(mean = mean(know)) %>% 
+      mutate(prop=pop.vector/sum(pop.vector)) %>% 
+      mutate(sub.mean = mean*prop) %>% 
+      pull(sub.mean) %>% 
+      sum()
+  )
+}
+
+
+```
+
+```{r}
+stream_answer <- declare_estimator(
+  handler = label_estimator(strata_weighted_mean),
+  inquiry = my_estimand)
+
+streamdesign <- stream_pop + my_estimand + stream_research + stream_sampling + stream_answer
+
+stream_diagnosis <- diagnose_design(stream_design, sims = 350)
+
+stream_diagnosis$diagnosands_df[,c(8,9,6,10)] %>% 
+  kable()
+
+
+```
+
