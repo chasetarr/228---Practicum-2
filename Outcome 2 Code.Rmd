@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 library(tidyverse)
 library(randomizr)
 library(DeclareDesign)
@@ -15,6 +16,64 @@ library(kableExtra)
 library(estimatr)
 library(DT)
 ```
+
+## Practicum 2: Measurement Strategy 
+
+
+### **Outcome 2**: Reconnecting Isolated Habitats, Restoring Floodplains, and Improving Connectivity
+
+#### Measurement Goal & Measure
+
+**Goal**: Analyze and determine the impacts of reconnecting isolated habitats through increased stream connectivity and restored floodplains
+
+“Which of the following habitat restoration activities is the most important for rebuilding salmon and steelhead populations in terms of habitat infrastructure"
+
+a. Expand and restore critical fish habitat (for spawning)
+b. Increasing law enforcement for stream degradation efforts (i.e. damming)
+c. Removal of barriers to restore aquatic habitat connectivity and restore floodplains
+d. Addition of naturally derived nutrients   
+
+
+#### Source & Rationale & Unit
+
+*Source*: SRB Restoration Project Staff scientists and volunteers will go out and take observations for all data
+
+*Rationale*: **Improved Stream Connectivity:** The measurement goal is tracked and compared wtih previous stream / habitat levels prior to intervention as well as historic values when original stream flow was unhindered. Fish population increase and found in new locations provide insight to overall success of habitat reconnection and support whether or not isolation provoked limited location access for fish species. **Restored Floodplains:** Provides data showing intervention success when compared to previous levels. 
+
+
+*Unit*: Area of Stream (km^2), area of flooded plains (km^2)
+
+
+#### Responsibility & Frequency
+
+*Responsibility*: SRB staff scientists and trained volunteers for both aspects of Outcome 2
+
+*Frequency*: Twice per year (preferably during wet and dry seasons)
+
+
+#### Declaring the intervention population
+
+Using stream data of the ten streams branching off of the main waterway, we found the approximate length of each stream.
+
+City        Approximate # households 
+----        ------------------------
+1                     2000
+2                     2000
+3                     1700
+4                     1400
+5                     1150
+6                      900
+7                      400
+8                      400
+9                      100
+10                     100
+
+#### Target Population & Challenges
+
+*Target Population*: The SRB stream connectivity in terms of habitat isolation and stream connectivity. Challenges include a consistency in measurement with multiple teams of volunteers / scientists measuring different stream branches off the main waterway, access to some locations of stream with overgrown foliage limiting vision, and a consistency in fish measurements. It becomes an emphasis to make sure each volunteer / worker is on the same page when it comes to measurement strategies, variable units, and measurement tools.
+
+
+#### DeclareDesign()
 
 ```{r}
 set.seed(228)
@@ -70,9 +129,9 @@ stream_answer <- declare_estimator(
   handler = label_estimator(strata_weighted_mean),
   inquiry = my_estimand)
 
-streamdesign <- stream_pop + my_estimand + stream_research + stream_sampling + stream_answer
+stream_design <- stream_pop + my_estimand + stream_research + stream_sampling + stream_answer
 
-stream_diagnosis <- diagnose_design(stream_design, sims = 350)
+stream_diagnosis <- diagnose_design(stream_design, sims = 1000)
 
 stream_diagnosis$diagnosands_df[,c(8,9,6,10)] %>% 
   kable()
