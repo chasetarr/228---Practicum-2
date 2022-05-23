@@ -1,5 +1,5 @@
 ---
-title: "Practicum 2"
+title: "Practicum 2 - Outcome 4"
 author: "Chase Tarr, Karla Garibay Garcia, Travis Christy"
 date: "5/6/2022"
 output: html_document
@@ -19,7 +19,9 @@ library(DT)
 
 ## Practicum 2: Measurement Strategy 
 
+
 ### **Outcome 4**: Increase community support and knowledge of the restoration program 
+
 
 #### Measurement Goal & Measure
 
@@ -32,6 +34,7 @@ b. Increasing law enforcement to curb illegal fishing
 c. Removal of barriers to restore aquatic habitat connectivity
 d. Addition of naturally derived nutrients   
 
+
 #### Source & Rationale & Unit
 
 *Source*: Survey response data
@@ -40,11 +43,13 @@ d. Addition of naturally derived nutrients
 
 *Unit*: Individual survey respondent
 
+
 #### Responsibility & Frequency
 
 *Responsibility*: Independent survey firm sampling random households within the SRB
 
 *Frequency*: Annually
+
 
 #### Declaring the population
 
@@ -52,16 +57,20 @@ Using demographic data of the six cities surrounding the SRB, we found the appro
 
 City        Approximate # households 
 ----        ------------------------
-1             1900
-2             1250
-3             900
-4             700
-5             445
-6             390
+1                     1900
+2                     1250
+3                      900
+4                      700
+5                      445
+6                      390
+
 
 #### Target Population & Challenges
 
-*Target Population*: The SRB community
+*Target Population*: The SRB community aka the households across the 6 cities in the SRB.
+
+
+#### DeclareDesign()
 
 ```{r}
 set.seed(228)
@@ -87,7 +96,7 @@ knowledge_research <- declare_assignment(prob = 0.7,
 knowledge_research
 
 knowledge_sampling <- declare_sampling(strata = knowledge,
-                             strata_n = c(300,200,100,90,80,50), # number of community households our goal is to have respond to knowledge survey
+                             strata_n = c(300,200,100,90,80,50), # number of households within each city that we estimate will respond to our knowledge survey
                              legacy = T)
 ```
 
@@ -102,17 +111,16 @@ strata_weighted_mean <- function(data){
       filter(r == 1) %>% 
       group_by(knowledge) %>% 
       summarize(mean = mean(know)) %>% 
-      mutate(prop=pop.vector/sum(pop.vector)) %>% 
+      mutate(prop=pop.vector/sum(pop.vector)) %>% # 'prop' is a variable calculating the proportion of units in the population that are at a given city
       mutate(sub.mean = mean*prop) %>% 
-      pull(sub.mean) %>% 
+      pull(sub.mean) %>% #summs all the weighed averages of knowledge within cities to get a weighed sample mean
       sum()
   )
 }
 
-
 ```
 
-```{r}
+```{r diagnosis, cache=TRUE}
 knowledge_answer <- declare_estimator(
   handler = label_estimator(strata_weighted_mean),
   inquiry = my_estimand)
