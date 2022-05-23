@@ -23,7 +23,7 @@ library(DT)
 
 #### Measurement Goal & Measure
 
-**Goal**: Assess the level of knowledge about the SRB restoration program over time.
+**Goal**: Assess the level of knowledge about the Sandy River Basin (SRB) restoration program over time
 
 “Which of the following SRB restoration activities is the most important for rebuilding salmon and steelhead populations?"
 
@@ -34,31 +34,43 @@ d. Addition of naturally derived nutrients
 
 #### Source & Rationale & Unit
 
-*Source*: 
+*Source*: Survey response data
 
-*Rationale*:
+*Rationale*: Community members’ knowledge of the restoration program’s strategic framework should be measured directly via a survey question that does not lead the respondent in any particular direction
 
-*Unit*:
+*Unit*: Individual survey respondent
 
 #### Responsibility & Frequency
 
-*Responsibility*: 
+*Responsibility*: Independent survey firm sampling random households within the SRB
 
-*Frequency*:
+*Frequency*: Annually
 
 #### Declaring the population
 
-Using demographic data, we
+Using demographic data of the six cities surrounding the SRB, we found the approximate number of households in each city.
+
+City        Approximate # households 
+----        ------------------------
+1             1900
+2             1250
+3             900
+4             700
+5             445
+6             390
+
+#### Target Population & Challenges
+
+*Target Population*: The SRB community
 
 ```{r}
 set.seed(228)
 knowledge_population <- declare_population(
   knowledge = add_level(N = 6,
                     baseline =
-                      c(0.7,0.6,0.5,0.4,0.2,0.2)), # based on different sized communities within the closest city (city districts)
-  community_pop = add_level(N = c(1900,1250,900,700,445,390), # households
-                      know = draw_binary(baseline))) # each districts population
-
+                      c(0.7,0.6,0.5,0.4,0.2,0.2)), # based on different sized cities within the SRB
+  community_pop = add_level(N = c(1900,1250,900,700,445,390), # households 
+                      know = draw_binary(baseline))) 
 pop <- knowledge_population()
 pop.vector <- c(1900,1250,900,700,445,390)
 
