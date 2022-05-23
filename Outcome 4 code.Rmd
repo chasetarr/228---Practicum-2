@@ -1,6 +1,6 @@
 ---
-title: "Outcome 4"
-author: "Chase Tarr"
+title: "Practicum 2"
+author: "Chase Tarr, Karla Garibay Garcia, Travis Christy"
 date: "5/6/2022"
 output: html_document
 ---
@@ -16,6 +16,39 @@ library(kableExtra)
 library(estimatr)
 library(DT)
 ```
+
+## Practicum 2: Measurement Strategy 
+
+### **Outcome 4**: Increase community support and knowledge of the restoration program 
+
+#### Measurement Goal & Measure
+
+**Goal**: Assess the level of knowledge about the SRB restoration program over time.
+
+“Which of the following SRB restoration activities is the most important for rebuilding salmon and steelhead populations?"
+
+a. Removal of invasive riparian vegetation
+b. Increasing law enforcement to curb illegal fishing
+c. Removal of barriers to restore aquatic habitat connectivity
+d. Addition of naturally derived nutrients   
+
+#### Source & Rationale & Unit
+
+*Source*: 
+
+*Rationale*:
+
+*Unit*:
+
+#### Responsibility & Frequency
+
+*Responsibility*: 
+
+*Frequency*:
+
+#### Declaring the population
+
+Using demographic data, we
 
 ```{r}
 set.seed(228)
