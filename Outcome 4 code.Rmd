@@ -135,9 +135,7 @@ knowledge_diagnosis$diagnosands_df[,c(8,9,6,10)] %>%
 ```
 
 
-```{r}
 
-```
 
 
 
